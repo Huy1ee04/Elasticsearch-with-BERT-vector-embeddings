@@ -1,0 +1,53 @@
+# Click the Variables button, above, to create your own variables.
+GET all_products/_mapping
+
+# Kiểm tra thông tin chung
+GET /
+
+# Xem danh sách các index
+GET /_cat/indices?v
+
+# Xem thông tin 1 index
+GET /all_products
+
+# Tạo mới 1 index
+PUT /products
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 3,
+      "number_of_replicas": 1
+    }
+  },
+  "mappings": {
+    "properties": {
+      "name": { "type": "text" },
+      "price": { "type": "float" },
+      "category": { "type": "keyword" }
+    }
+  }
+}
+
+# Thêm 1 doc vào index
+POST /products/_doc/1
+{
+  "name": "Laptop Dell XPS 13",
+  "price": 1200,
+  "category": "Electronics"
+}
+
+# Tìm kiếm trong 1 index
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "category": "Electronics" } },
+        { "range": { "price": { "gte": 1000, "lte": 2000 } } }
+      ]
+    }
+  }
+}
+
+
+
